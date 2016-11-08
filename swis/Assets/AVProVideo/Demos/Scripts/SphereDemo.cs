@@ -3,7 +3,9 @@
 #endif
 
 using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SphereDemo : MonoBehaviour
 {
@@ -29,11 +31,15 @@ public class SphereDemo : MonoBehaviour
 
 	private float _spinX;
 	private float _spinY;
+	Dictionary<string, Quaternion> rotations = new Dictionary<string, Quaternion> ();
 
 	void Update ()
 	{
 #if UNITY_HAS_VRCLASS
 		if (UnityEngine.VR.VRDevice.isPresent) {
+			var rotation = UnityEngine.VR.InputTracking.GetLocalRotation (UnityEngine.VR.VRNode.CenterEye);
+			rotations.Add (Time.frameCount.ToString (), rotation);
+//			print ("x: " + angles.eulerAngles.x + " y: " + angles.eulerAngles.y + " z: " + angles.eulerAngles.z);
 			// Mouse click translates to gear VR touch to reset view
 			if (Input.GetMouseButtonDown (0) || Input.GetKeyDown (KeyCode.Space)) {
 				UnityEngine.VR.InputTracking.Recenter ();
@@ -45,6 +51,10 @@ public class SphereDemo : MonoBehaviour
 
 			if (Input.GetKeyDown (KeyCode.Q)) {
 				#if UNITY_EDITOR
+				foreach (KeyValuePair<string, Quaternion> r in rotations) {
+					//display each product to console by using Display method in Farm Shop class
+					print ("SWIS frame: " + r.Key + " rotation: " + r.Value.eulerAngles);
+				}
 				UnityEditor.EditorApplication.isPlaying = false;
 				#else
 				Application.Quit();
