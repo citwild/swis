@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/AVProVideo/Demos/08_Demo_360SphereVideo.unity
+  isLoaded: 1
+  isActive: 1

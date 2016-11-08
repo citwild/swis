@@ -95,6 +95,9 @@
 -define:UNITY_EDITOR_OSX
 -define:UNITY_TEAM_LICENSE
 -define:UNITY_PRO_LICENSE
+'Assets/AVProVideo/Scripts/Editor/DisplayUGUIEditor.cs'
+'Assets/AVProVideo/Scripts/Editor/MediaPlayerEditor.cs'
+'Assets/AVProVideo/Scripts/Editor/PostProcessBuild.cs'
 'Assets/OVR/Editor/OVRBuild.cs'
 'Assets/OVR/Editor/OVRMoonlightLoader.cs'
 'Assets/OVR/Editor/OVRScreenshotWizard.cs'
