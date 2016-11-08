@@ -6,10 +6,15 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class SphereDemo : MonoBehaviour
 {
-	void Start ()
+    private static string savedDataPath = Application.persistentDataPath + "/savedData";
+    private static string dictionaryName = "Rotations.txt";
+    private static string dictionaryFullName = savedDataPath + "/" + dictionaryName;
+
+    void Start ()
 	{
 #if UNITY_HAS_VRCLASS
 		if (UnityEngine.VR.VRDevice.isPresent) {
@@ -22,6 +27,7 @@ public class SphereDemo : MonoBehaviour
 		}
 	}
 
+
 	void OnDestroy ()
 	{
 		if (SystemInfo.supportsGyroscope) {
@@ -31,14 +37,16 @@ public class SphereDemo : MonoBehaviour
 
 	private float _spinX;
 	private float _spinY;
-	Dictionary<string, Quaternion> rotations = new Dictionary<string, Quaternion> ();
+    Dictionary<string, Quaternion> rotations = new Dictionary<string, Quaternion> ();
 
-	void Update ()
+    void Update ()
 	{
+        Debug.Log(Application.persistentDataPath);
 #if UNITY_HAS_VRCLASS
 		if (UnityEngine.VR.VRDevice.isPresent) {
-			var rotation = UnityEngine.VR.InputTracking.GetLocalRotation (UnityEngine.VR.VRNode.CenterEye);
-			rotations.Add (Time.frameCount.ToString (), rotation);
+            var rotation = UnityEngine.VR.InputTracking.GetLocalRotation (UnityEngine.VR.VRNode.CenterEye);
+            rotations.Add (Time.frameCount.ToString (), rotation);
+            
 //			print ("x: " + angles.eulerAngles.x + " y: " + angles.eulerAngles.y + " z: " + angles.eulerAngles.z);
 			// Mouse click translates to gear VR touch to reset view
 			if (Input.GetMouseButtonDown (0) || Input.GetKeyDown (KeyCode.Space)) {
@@ -51,10 +59,23 @@ public class SphereDemo : MonoBehaviour
 
 			if (Input.GetKeyDown (KeyCode.Q)) {
 				#if UNITY_EDITOR
-				foreach (KeyValuePair<string, Quaternion> r in rotations) {
-					//display each product to console by using Display method in Farm Shop class
-					print ("SWIS frame: " + r.Key + " rotation: " + r.Value.eulerAngles);
-				}
+				//foreach (KeyValuePair<string, Quaternion> r in rotations) {
+				//	//display each product to console by using Display method in Farm Shop class
+				//	print ("SWIS frame: " + r.Key + " rotation: " + r.Value.eulerAngles);
+
+				//}
+
+                // Save the dictionary to a file
+                if (rotations != null)
+                {
+                    string fileContent = "";
+                    foreach (var item in rotations)
+                    {
+                        fileContent += item.Key + "," + item.Value + "\n";
+                    }
+
+                    File.WriteAllText(dictionaryFullName, fileContent);
+                }
 				UnityEditor.EditorApplication.isPlaying = false;
 				#else
 				Application.Quit();
